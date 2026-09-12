@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SZEQEZ // TRANSMISSION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none !important;
+        }
+
+        body {
+            background-color: #030207;
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(123, 44, 191, 0.15) 0%, transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(0, 245, 212, 0.12) 0%, transparent 45%);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #f1f5f9;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Custom Cursor Elements */
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background: #00f5d4;
+            border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px #00f5d4, 0 0 20px #00f5d4;
+            transition: transform 0.15s ease-out;
+        }
+
+        .cursor-outline {
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(157, 78, 221, 0.6);
+            border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: transform 0.25s ease-out, width 0.2s, height 0.2s, border-color 0.2s;
+        }
+
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            background: #7b2cbf;
+            z-index: 9997;
+            animation: fadeOut 0.6s linear forwards;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 0.8; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.2); }
+        }
+
+        /* Ambient Grid */
+        .bg-grid {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background-size: 50px 50px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            transform: rotate(-12deg);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Glass Form Container */
+        .card {
+            position: relative;
+            z-index: 10;
+            background: rgba(13, 10, 25, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(157, 78, 221, 0.25);
+            border-radius: 20px;
+            padding: 45px 40px;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8),
+                        0 0 30px rgba(123, 44, 191, 0.15);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card:hover {
+            border-color: rgba(0, 245, 212, 0.4);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9),
+                        0 0 40px rgba(0, 245, 212, 0.2);
+        }
+
+        .header {
+            margin-bottom: 32px;
+        }
+
+        .tag {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            color: #00f5d4;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.9rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #ffffff 0%, #9d4edd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #94a3b8;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(5, 3, 12, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: #f8fafc;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #00f5d4;
+            background: rgba(10, 6, 22, 0.95);
+            box-shadow: 0 0 15px rgba(0, 245, 212, 0.25);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #7b2cbf, #9d4edd);
+            border: none;
+            border-radius: 10px;
+            color: #ffffff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #00f5d4, #00bbf9);
+            color: #030207;
+            box-shadow: 0 0 25px rgba(0, 245, 212, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        /* Success Overlay */
+        .success-screen {
+            display: none;
+            text-align: center;
+            padding: 20px 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 245, 212, 0.1);
+            border: 2px solid #00f5d4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: #00f5d4;
+            font-size: 1.8rem;
+            box-shadow: 0 0 20px rgba(0, 245, 212, 0.3);
+        }
+
+        .success-screen h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: #00f5d4;
+            margin-bottom: 10px;
+        }
+
+        .success-screen p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Main Card -->
+    <div class="card">
+        
+        <!-- Contact Form -->
+        <form id="contactForm" action="https://formspree.io/f/mppzeane" method="POST">
+            <div class="header">
+                <span class="tag">// Encrypted Channel</span>
+                <h1>TRANSMIT DATA</h1>
+            </div>
+
+            <div class="input-group">
+                <label for="email">Sender Email</label>
+                <input type="email" id="email" name="email" placeholder="your.name@domain.com" required>
+            </div>
+
+            <div class="input-group">
+                <label for="title">Subject Title</label>
+                <input type="text" id="title" name="title" placeholder="Brief statement..." required>
+            </div>
+
+            <div class="input-group">
+                <label for="message">Transmission Body</label>
+                <textarea id="message" name="message" placeholder="Type your full message here..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">SEND DATA ➔</button>
+        </form>
+
+        <!-- Inline Success Message -->
+        <div class="success-screen" id="successScreen">
+            <div class="success-icon">✓</div>
+            <h2>SUBMITTED</h2>
+            <p>Your packet was sent successfully to szeqez@gmail.com.</p>
+        </div>
+
+    </div>
+
+    <script>
+        // Custom Cursor & Particle Trail Effect
+        const dot = document.querySelector('.cursor-dot');
+        const outline = document.querySelector('.cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            dot.style.left = `${posX}px`;
+            dot.style.top = `${posY}px`;
+
+            outline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 400, fill: "forwards" });
+
+            // Spawn dynamic particle trails on move
+            if (Math.random() < 0.35) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                const size = Math.random() * 6 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}px`;
+                particle.style.top = `${posY}px`;
+                particle.style.background = Math.random() > 0.5 ? '#00f5d4' : '#9d4edd';
+                document.body.appendChild(particle);
+
+                setTimeout(() => particle.remove(), 600);
+            }
+        });
+
+        // Hover expansions for cursor
+        const interactables = document.querySelectorAll('input, textarea, button');
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                outline.style.width = '55px';
+                outline.style.height = '55px';
+                outline.style.borderColor = '#00f5d4';
+            });
+            el.addEventListener('mouseleave', () => {
+                outline.style.width = '36px';
+                outline.style.height = '36px';
+                outline.style.borderColor = 'rgba(157, 78, 221, 0.6)';
+            });
+        });
+
+        // Async Form Submission (No Redirects)
+        const form = document.getElementById('contactForm');
+        const successScreen = document.getElementById('successScreen');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            
+            submitBtn.textContent = 'TRANSMITTING...';
+            submitBtn.style.opacity = '0.6';
+
+            const data = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: data,
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    form.style.display = 'none';
+                    successScreen.style.display = 'block';
+                } else {
+                    alert("Submission failed. Please check connection.");
+                    submitBtn.textContent = 'SEND DATA ➔';
+                    submitBtn.style.opacity = '1';
+                }
+            } catch (error) {
+                alert("An error occurred during submission.");
+                submitBtn.textContent = 'SEND DATA ➔';
+                submitBtn.style.opacity = '1';
+            }
+        });
+    </script>
+</body>
+</html>
