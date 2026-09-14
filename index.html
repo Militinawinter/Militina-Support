@@ -102,6 +102,43 @@
             100% { transform: scale(1.2) translate(30px, -30px); opacity: 0.9; }
         }
 
+        /* White Glowing Ambient Dots Container */
+        .white-dots-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        .white-dot {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #ffffff, 0 0 15px rgba(255, 255, 255, 0.8);
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(105vh) scale(0.3);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1);
+                opacity: 0;
+            }
+        }
+
         /* Desktop Cursor Styling */
         @media (pointer: fine) {
             * {
@@ -368,6 +405,9 @@
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
 
+    <!-- Floating White Glowing Particles -->
+    <div class="white-dots-container" id="whiteDotsContainer"></div>
+
     <!-- Custom Cursor (Desktop Only) -->
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
@@ -410,6 +450,28 @@
     </div>
 
     <script>
+        // Generate Dynamic Floating White Glowing Dots
+        const dotsContainer = document.getElementById('whiteDotsContainer');
+        const dotCount = 28; // จำนวนจุดเรืองแสงสีขาว
+
+        for (let i = 0; i < dotCount; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('white-dot');
+            
+            const size = Math.random() * 3.5 + 1.5; // ขนาดจุดสุ่ม 1.5px - 5px
+            const posX = Math.random() * 100; // ตำแหน่งตามแนวแกน X (0% - 100%)
+            const duration = Math.random() * 8 + 6; // ระยะเวลาในการลอย (6s - 14s)
+            const delay = Math.random() * 10; // ดีเลย์เริ่มต้น
+            
+            dot.style.width = `${size}px`;
+            dot.style.height = `${size}px`;
+            dot.style.left = `${posX}%`;
+            dot.style.animationDuration = `${duration}s`;
+            dot.style.animationDelay = `${delay}s`;
+
+            dotsContainer.appendChild(dot);
+        }
+
         // Custom Cursor & Particle Trail Effect (Desktop)
         const dot = document.querySelector('.cursor-dot');
         const outline = document.querySelector('.cursor-outline');
